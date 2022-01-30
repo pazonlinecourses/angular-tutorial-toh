@@ -14,6 +14,9 @@ import { HEROES } from './mock-heroes';
 export class HeroService {
 
   private heroesUrl = "api/heroes"
+  httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  };
 
   constructor(
     private messageService: MessageService,
@@ -22,6 +25,13 @@ export class HeroService {
 
   private log(message: string): void {
     this.messageService.add(`HeroService: ${message}`);
+  }
+  updateHero(hero: Hero): Observable<any> {
+    return  this.httpClient.put(this.heroesUrl, hero, this.httpOptions).
+      pipe(
+        tap(_ => this.log(`updated hero id=${hero.id}`)),
+        catchError(this.handleError<any>('updateHero'))
+      );
   }
 
   getHeroes(): Observable<Hero[]> {
