@@ -53,7 +53,7 @@ export class HeroService {
   addHero(hero: Hero): Observable<Hero> {
     return this.httpClient.post<Hero>(this.heroesUrl, hero, this.httpOptions).
       pipe(
-        tap((newHero: Hero) => this.log(`added hero with id=${newHero.id}`)),
+        tap({next: (newHero: Hero) => this.log(`added hero with id=${newHero.id}`)}),
         catchError(this.handleError<Hero>('addHero'))
       );
   }
