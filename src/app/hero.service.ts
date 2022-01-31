@@ -27,6 +27,19 @@ export class HeroService {
     this.messageService.add(`HeroService: ${message}`);
   }
 
+  searchHeroes(term: string): Observable<Hero[]> {
+    if(!term.trim()) {
+      return of([]);
+    }
+    return this.httpClient.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).
+      pipe(
+        tap({next: 
+          x => x.length ?
+            this.log(`found heroes matching "${term}"`) :
+            this.log(`no heroes matching "${term}"`)
+        }));
+  }
+
   deleteHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
 
